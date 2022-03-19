@@ -1,0 +1,74 @@
+{% extends 'admin/base.html' %}
+{% load i18n %}
+{% load footer %}
+{% load static %}
+
+{% block extrahead %}{{ block.super }}
+<style>
+    :root {
+        --secondary: #262B3C;
+
+        --primary: #2A3042;
+        --primary-fg: #eee;
+        --body-fg: #eeeeee;
+        --body-bg: #222736;
+        --body-quiet-color: #e0e0e0;
+        --body-loud-color: #ffffff;
+        --breadcrumbs-link-fg: #e0e0e0;
+        --breadcrumbs-bg: var(--primary);
+        --link-fg: #17b3a3;
+        --link-hover-color: #4ac1f7;
+        --link-selected-fg: #17b3a3;
+        --hairline-color: #32394e;
+        --border-color: #32394e;
+        --error-fg: #e35f5f;
+        --darkened-bg: #2a3042;
+        --delete-button-hover-bg: #cf5a5a;
+        --delete-button-bg: #f46a6a;
+        --message-success-bg: #1e9368;
+        --message-warning-bg: #583305;
+        --message-error-bg: #570808;
+        --selected-bg: #212533;
+        --selected-row: #00363a;
+        --close-button-bg: #333333;
+        --object-tools-bg: #556ee6;
+        --object-tools-hover-bg: #485ec4;
+        --close-button-hover-bg: #666666;
+        --accent: #17b3a3;
+    }
+</style>
+<link rel="shortcut icon" href="{% static 'svg/logo.svg'  %}" />
+{% endblock %}
+
+{% block userlinks %}
+<form action="{% url 'set_language' %}" method="post" style="display:inline">{% csrf_token %}
+    <input name="next" type="hidden" value="{{ redirect_to }}">
+    <select name="language" onchange="this.form.submit()">
+        {% get_current_language as LANGUAGE_CODE %}
+        {% get_available_languages as LANGUAGES %}
+        {% get_language_info_list for LANGUAGES as languages %}
+        {% for language in languages %}
+        <option value="{{ language.code }}" {% if language.code == LANGUAGE_CODE %} selected{% endif %}>
+            {{ language.name_local }} ({{ language.code }})
+        </option>
+        {% endfor %}
+    </select>
+</form>
+{{ block.super }}
+{% endblock %}
+
+{% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block content_title %}
+
+
+<h1>
+
+</h1>
+
+
+{% endblock %}
+
+{% block footer %}
+{% admin_footer %}
+{% endblock %}

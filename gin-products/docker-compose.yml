@@ -1,0 +1,25 @@
+version: '3.9'
+
+services:
+  products:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    volumes:
+      # Source Code of project
+      - .:/app
+
+    stop_grace_period: 1m30s
+    ports:
+      - "8080:8080"
+
+    restart: always
+
+    expose:
+      - 8080
+
+    networks:
+      - webserver_network
+      - database_network
+      - cache_network

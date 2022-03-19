@@ -1,0 +1,47 @@
+version: '3.9'
+
+services:
+  users:
+    build:
+      # Path of the django source code
+      context: .
+      # Path of the Dockerfile
+      dockerfile: Dockerfile
+      args:
+        # USERNAME: django
+        WORKING_DIR: /app
+        # GID: 1001
+        # UID: 1001
+
+    container_name: users
+    hostname: users
+    restart: always
+
+    # Run service in ( production|development )
+    # Dev: python manage.py runserver 8000
+    # PROD: gunicorn -c config/gunicorn/conf.py --bind :8000 --chdir kernel kernel.wsgi:application
+    command: gunicorn -c conf/gunicorn/conf.py --chdir kernel kernel.wsgi:application
+
+    volumes:
+      # Source Code of project
+      - .:/app
+
+      # Gunicorn Log files
+      - /var/log/gunicorn/users:/var/log/gunicorn
+
+    stop_grace_period: 1m30s
+    ports:
+       - "8000:8000"
+
+    networks:
+      - webserver_network
+      - database_network
+      - cache_network
+
+networks:
+  webserver_network:
+    external: true
+  database_network:
+    external: true
+  cache_network:
+    external: true
