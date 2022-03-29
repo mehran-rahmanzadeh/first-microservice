@@ -52,3 +52,6 @@ django-cachalot
 djangorestframework-simplejwt
 drf-yasg
 django-ckeditor
+djangogrpcframework
+grpcio
+grpcio-tools
