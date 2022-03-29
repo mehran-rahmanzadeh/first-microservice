@@ -21,6 +21,7 @@ type DatabaseConfig struct {
 type MicroserviceConfig struct {
 	TokenVerifyEndpoint string
 	UserDetailEndpoint  string
+	GRPC                string
 }
 
 type ServerConfig struct {
