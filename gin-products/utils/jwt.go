@@ -1,10 +1,13 @@
 package utils
 
 import (
+	"context"
 	"gin-products/config"
 	"gin-products/models"
+	pb "gin-products/proto"
+
 	"github.com/go-resty/resty/v2"
-	"net/http"
+	"google.golang.org/grpc"
 )
 
 type VerifyTokenBody struct {
@@ -12,18 +15,37 @@ type VerifyTokenBody struct {
 }
 
 func ValidateToken(token string) (models.User, bool) {
-	client := resty.New()
-	response, _ := client.R().
-		SetHeader("Content-Type", "application/json").
-		SetBody(VerifyTokenBody{Token: token}).
-		Post(config.Settings.Microservice.TokenVerifyEndpoint)
-	if response.StatusCode() != http.StatusOK {
+
+	// connect to gRPC server
+	conn, err := grpc.Dial(config.Settings.Microservice.GRPC, grpc.WithInsecure())
+	if err != nil {
+		panic("Cannot connect to gRPC server")
+	}
+	defer conn.Close()
+
+	isAuthenticated := false
+
+	// call verify token method in gRPC proto
+	grpcClient := pb.NewAuthControllerClient(conn)
+	grpcResp, err := grpcClient.VerifyToken(context.Background(), &pb.VerifyRequest{Token: token})
+	if err != nil {
+		isAuthenticated = false
 		return models.User{}, false
 	}
-	user := models.User{}
-	response, _ = client.R().
-		SetAuthToken(token).
-		SetResult(&user).
-		Get(config.Settings.Microservice.UserDetailEndpoint)
-	return user, true
+
+	isAuthenticated = grpcResp.Access
+
+	// get user detail using http
+	if isAuthenticated {
+		client := resty.New()
+		user := models.User{}
+		client.R().
+			SetAuthToken(token).
+			SetResult(&user).
+			Get(config.Settings.Microservice.UserDetailEndpoint)
+		return user, true
+	} else {
+		return models.User{}, false
+	}
+
 }

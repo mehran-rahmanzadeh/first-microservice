@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "./pb";
+
+service AuthController {
+    rpc VerifyToken(VerifyRequest) returns (VerifyResponse) {}
+}
+
+message VerifyRequest {
+    string token = 1;
+}
+
+message VerifyResponse {
+    bool access = 1;
+}
