@@ -1,13 +1,15 @@
 syntax = "proto3";
 
-package auth;
-
-import "google/protobuf/empty.proto";
+package pb;
 
 service AuthController {
-    rpc VerifyToken(VerifyRequest) returns (google.protobuf.Empty) {}
+    rpc VerifyToken(VerifyRequest) returns (VerifyResponse) {}
 }
 
 message VerifyRequest {
     string token = 1;
+}
+
+message VerifyResponse {
+    bool access = 1;
 }

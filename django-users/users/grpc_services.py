@@ -1,3 +1,4 @@
+from re import T
 from django.conf import settings
 
 from users import auth_pb2, auth_pb2_grpc
@@ -25,7 +26,7 @@ class AuthServicer(auth_pb2_grpc.AuthControllerServicer):
             jti = token.get(api_settings.JTI_CLAIM)
             if BlacklistedToken.objects.filter(token__jti=jti).exists():
                 context.set_code(grpc.StatusCode.PERMISSION_DENIED)
-                return auth_pb2.google_dot_protobuf_dot_empty__pb2.Empty()
+                return auth_pb2.VerifyResponse(access=False)
         
         context.set_code(grpc.StatusCode.OK)
-        return auth_pb2.google_dot_protobuf_dot_empty__pb2.Empty()
+        return auth_pb2.VerifyResponse(access=True)

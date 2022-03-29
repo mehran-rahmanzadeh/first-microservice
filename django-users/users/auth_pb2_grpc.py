@@ -3,7 +3,6 @@
 import grpc
 
 import users.auth_pb2 as auth__pb2
-from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
 class AuthControllerStub(object):
@@ -16,9 +15,9 @@ class AuthControllerStub(object):
             channel: A grpc.Channel.
         """
         self.VerifyToken = channel.unary_unary(
-                '/auth.AuthController/VerifyToken',
+                '/pb.AuthController/VerifyToken',
                 request_serializer=auth__pb2.VerifyRequest.SerializeToString,
-                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                response_deserializer=auth__pb2.VerifyResponse.FromString,
                 )
 
 
@@ -37,11 +36,11 @@ def add_AuthControllerServicer_to_server(servicer, server):
             'VerifyToken': grpc.unary_unary_rpc_method_handler(
                     servicer.VerifyToken,
                     request_deserializer=auth__pb2.VerifyRequest.FromString,
-                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+                    response_serializer=auth__pb2.VerifyResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'auth.AuthController', rpc_method_handlers)
+            'pb.AuthController', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
@@ -60,8 +59,8 @@ class AuthController(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/auth.AuthController/VerifyToken',
+        return grpc.experimental.unary_unary(request, target, '/pb.AuthController/VerifyToken',
             auth__pb2.VerifyRequest.SerializeToString,
-            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            auth__pb2.VerifyResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
