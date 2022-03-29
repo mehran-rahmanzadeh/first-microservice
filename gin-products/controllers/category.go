@@ -3,8 +3,9 @@ package controllers
 import (
 	"gin-products/models"
 	"gin-products/utils"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 func CategoryList(c *gin.Context) {

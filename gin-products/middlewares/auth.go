@@ -2,8 +2,9 @@ package middlewares
 
 import (
 	"gin-products/utils"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 func AuthorizeJWT() gin.HandlerFunc {
