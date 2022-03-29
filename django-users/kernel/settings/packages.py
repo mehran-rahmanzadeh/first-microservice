@@ -24,6 +24,7 @@ INSTALLED_APPS.append('admin_footer')
 INSTALLED_APPS.append('admin_honeypot')
 INSTALLED_APPS.append('cachalot')
 INSTALLED_APPS.append('rest_framework_simplejwt')
+INSTALLED_APPS.append('django_grpc_framework')
 
 # Log
 INSTALLED_APPS.append('django_admin_logs')
